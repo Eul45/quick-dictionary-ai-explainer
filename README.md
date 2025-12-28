@@ -2,16 +2,19 @@
 
 Highlight text on any webpage to instantly see a dictionary definition, and optionally ask **Gemini** to explain it in simple terms.
 
-## PLACEHOLDER IMAGES (add later)
+## Screenshots
 
-- Screenshot 1: Tooltip on selected text
-  - `docs/screenshots/tooltip.png`
-- Screenshot 2: Popup UI (lookup + AI explain)
-  - `docs/screenshots/popup.png`
-- Screenshot 3: Options page (API key + model + toggles)
-  - `docs/screenshots/options.png`
-- Screenshot 4: Chat history view
-  - `docs/screenshots/history.png`
+### 1) Highlight text on a webpage (auto tooltip)
+
+![Highlighting text triggers on-page tooltip](images/1.png)
+
+### 2) Dictionary lookup in the popup
+
+![Popup: asking for a definition](images/2.png)
+
+### 3) AI follow-up question (popup)
+
+![Popup: asking an AI follow-up question](images/3.png)
 
 ---
 
@@ -194,4 +197,4 @@ PRs welcome. If you change permissions, please explain why in the PR.
 ## Credits
 
 Built by Eyuel Engida.
-#
+
