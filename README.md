@@ -173,32 +173,7 @@ quick-dictionary-ai-explainer/
 ├── style.css          # shared styling for popup/options
 └── icons/             # extension icons
 ```
-
 ---
-
-## Notes / known gaps (current code)
-
-- `manifest.json` references icon files (`icons/icon16.png`, `icons/icon48.png`, `icons/icon128.png`). Make sure those files exist before publishing.
-- The repo folder currently doesn’t include a `LICENSE` file in this workspace (add one before open-sourcing).
-
----
-
-## Roadmap ideas (optional)
-
-- Add pronunciation audio (if available from dictionary API)
-- Support multiple languages
-- Pin tooltip / move tooltip to a fixed side panel
-- Export chat history
-
----
-
-## Contributing
-
-PRs welcome. If you change permissions, please explain why in the PR.
-
----
-
-## Credits
-
 Built by Eyuel Engida.
+
 
