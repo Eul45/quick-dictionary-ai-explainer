@@ -153,7 +153,7 @@ This extension requests:
 - Chat history is stored locally in `browser.storage.local`.
 - The extension sends selected/text input to:
   - Free Dictionary API (for definitions)
-  - Google Gemini API (for explanations)
+  - Google Gemini API (for explanations optional)
 
 If you don’t want network requests on selection, disable **Auto-lookup**.
 
@@ -175,5 +175,6 @@ quick-dictionary-ai-explainer/
 ```
 ---
 Built by Eyuel Engida.
+
 
 
