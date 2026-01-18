@@ -6,7 +6,7 @@ browser.runtime.onInstalled.addListener(() => {
     contexts: ["selection"]
   });
   
-  // Set dark mode and auto-lookup as default for new installations
+  // Set dark mode and auto-lookup as default for new installation
   browser.storage.sync.get({ darkMode: null, autoLookup: null }).then((data) => {
     const updates = {};
     if (data.darkMode === null) {
