@@ -1,12 +1,15 @@
 {
   "manifest_version": 2,
   "name": "Quick Dictionary + AI Explainer",
-  "version": "1.1.8",
+  "version": "1.1.10",
   "description": "Highlight a word to see definitions instantly and get AI explain it for you.",
   "browser_specific_settings": {
     "gecko": {
       "id": "{109314a5-80af-4cf5-981e-aaff76eb37cd}",
-      "strict_min_version": "81.0"
+      "strict_min_version": "143.0",
+      "data_collection_permissions": {
+        "required": ["none"]
+      }
     }
   },
   "permissions": [
