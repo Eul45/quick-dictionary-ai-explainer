@@ -18,6 +18,9 @@ const GEMINI_MODELS = [
    { id: 'gemini-2.5-pro', name: 'Pro 2.5 (Most Capable)' },
   
    { id: 'gemini-3-flash-preview', name: 'Flash 3 (Newest)' },
+  
+   { id: 'gemini-3-pro-preview', name: 'Pro 3.0 (paid)' }
+
 ];
 
 // Populate model dropdown
