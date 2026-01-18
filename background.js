@@ -1,4 +1,16 @@
 /* Background script */
+
+// Available Gemini models - first one is the default
+const GEMINI_MODELS = [
+  { id: 'gemini-2.5-flash-lite', name: 'Flash 2.5 lite (new)' },
+  { id: 'gemini-2.5-flash', name: 'Flash 2.5 (Newest)' },
+  { id: 'gemini-1.5-pro-latest', name: 'Gemini 1.5 Pro (Latest)' },
+  { id: 'gemini-2.5-pro', name: 'Pro 2.5 (Most Capable)' },
+  { id: 'gemini-3-flash-preview', name: 'Flash 3 (Newest)' },
+  { id: 'gemini-3-pro-preview', name: 'Pro 3.0 (paid)' }
+];
+const DEFAULT_MODEL = GEMINI_MODELS[0].id;
+
 browser.runtime.onInstalled.addListener(() => {
   browser.contextMenus.create({
     id: "aiExplainSelection",
@@ -6,7 +18,7 @@ browser.runtime.onInstalled.addListener(() => {
     contexts: ["selection"]
   });
   
-  // Set dark mode and auto-lookup as default for new installation
+  // Set dark mode and auto-lookup as default for new installations
   browser.storage.sync.get({ darkMode: null, autoLookup: null }).then((data) => {
     const updates = {};
     if (data.darkMode === null) {
@@ -23,7 +35,22 @@ browser.runtime.onInstalled.addListener(() => {
 
 browser.contextMenus.onClicked.addListener(async (info, tab) => {
   if (info.menuItemId === "aiExplainSelection" && info.selectionText) {
-    const explanation = await explainWithAI(info.selectionText).catch(e => `Error: ${e.message}`);
+    // Get page context if enabled
+    let pageContext = null;
+    const cfg = await getConfig();
+    if (cfg.includePageContext && tab?.id) {
+      try {
+        const response = await browser.tabs.sendMessage(tab.id, { type: 'GET_PAGE_CONTENT' });
+        if (response?.pageInfo) {
+          pageContext = response.pageInfo;
+        }
+      } catch (error) {
+        console.log('Could not get page context:', error);
+      }
+    }
+    
+    const result = await explainWithAI(info.selectionText, false, pageContext).catch(e => ({ explanation: `Error: ${e.message}` }));
+    const explanation = result.explanation || result;
     if (tab?.id) {
       browser.tabs.sendMessage(tab.id, { type: 'SHOW_TOOLTIP', payload: { text: explanation } });
     }
@@ -42,7 +69,11 @@ browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
         console.log('Dictionary lookup result:', def);
         sendResponse({ ok: true, definition: def });
       } else if (message.type === 'AI_EXPLAIN') {
-        const result = await explainWithAI(message.payload.text, message.payload.isNewConversation);
+        const result = await explainWithAI(
+          message.payload.text, 
+          message.payload.isNewConversation,
+          message.payload.pageContext
+        );
         if (result.explanation) {
           sendResponse({ ok: true, explanation: result.explanation, chatId: result.chatId, context: result.context });
         } else {
@@ -93,15 +124,30 @@ async function dictionaryLookup(text) {
 }
 
 /* AI explanation using Google's Gemini API */
-async function explainWithAI(text, isNewConversation = false) {
+async function explainWithAI(text, isNewConversation = false, pageContext = null) {
   const cfg = await getConfig();
   if (!cfg.apiKey) {
     throw new Error('Add your Gemini API key in Options.');
   }
   
-  const model = cfg.model || 'gemini-3-flash-preview';
+  const model = cfg.model || DEFAULT_MODEL;
   const chatId = isNewConversation ? generateChatId() : null;
-  const prompt = `Explain the following in simple, beginner-friendly terms. Keep it under 120 words:\n\n"${text}"`;
+  
+  // Build prompt with optional page context
+  let prompt = '';
+  if (pageContext && cfg.includePageContext) {
+    // Include page context if enabled
+    prompt = `You are analyzing text from a webpage. Here's the context:\n\n` +
+             `Page Title: ${pageContext.title || 'Unknown'}\n` +
+             `Page URL: ${pageContext.url || 'Unknown'}\n` +
+             `Page Content (excerpt): ${pageContext.content.substring(0, 2000) || 'N/A'}\n\n` +
+             `The user has selected this text: "${text}"\n\n` +
+             `Please explain what this selected text means in the context of this page. ` +
+             `Focus on how it relates to the page content. Keep it under 150 words.`;
+  } else {
+    // Original prompt without context
+    prompt = `Explain the following in simple, beginner-friendly terms. Keep it under 120 words:\n\n"${text}"`;
+  }
 
   const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${cfg.apiKey}`;
   
@@ -152,7 +198,7 @@ async function followUpWithAI(question, chatId, context) {
     throw new Error('Add your Gemini API key in Options.');
   }
   
-  const model = cfg.model || 'gemini-3-flash-preview';
+  const model = cfg.model || DEFAULT_MODEL;
   
   // Build conversation history for context
   let conversationText = '';
@@ -246,8 +292,9 @@ async function updateChatHistory(chatId, updatedContext) {
 function getConfig() {
   return browser.storage.sync.get({
     apiKey: '',
-    model: 'gemini-3-flash-preview',
+    model: DEFAULT_MODEL,
     autoLookup: true,
-    darkMode: true
+    darkMode: true,
+    includePageContext: false
   });
 }
