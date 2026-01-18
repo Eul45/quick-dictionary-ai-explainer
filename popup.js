@@ -152,12 +152,31 @@ btnExplain.addEventListener('click', async () => {
   const text = wordInput.value.trim();
   if (!text) { return; }
   result.textContent = "Asking AI to explain...";
+  
+  // Get page context if enabled
+  let pageContext = null;
+  const config = await browser.storage.sync.get({ includePageContext: false });
+  if (config.includePageContext) {
+    try {
+      const tabs = await browser.tabs.query({ active: true, currentWindow: true });
+      if (tabs[0]?.id) {
+        const response = await browser.tabs.sendMessage(tabs[0].id, { type: 'GET_PAGE_CONTENT' });
+        if (response?.pageInfo) {
+          pageContext = response.pageInfo;
+        }
+      }
+    } catch (error) {
+      console.log('Could not get page context:', error);
+    }
+  }
+  
   try {
     const res = await sendMessageWithRetry({ 
       type: 'AI_EXPLAIN', 
       payload: { 
         text,
-        isNewConversation: true
+        isNewConversation: true,
+        pageContext: pageContext
       } 
     });
     if (res?.ok) {
