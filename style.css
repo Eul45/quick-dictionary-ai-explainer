@@ -23,6 +23,18 @@ body {
   color: var(--text-color);
 }
 
+/* Options page specific - override popup styles */
+body.options-page {
+  width: 100%;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: var(--bg-color);
+}
+
 .row {
   display: flex;
   gap: 8px;
@@ -31,20 +43,46 @@ body {
 
 input[type="text"] {
   flex: 1;
-  padding: 8px;
+  padding: 8px 12px;
   border-radius: 8px;
   border: 1px solid var(--border-color);
   background-color: var(--bg-color);
   color: var(--text-color);
+  font-size: 13px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
 }
 
 button {
-  padding: 8px 10px;
+  padding: 8px 12px;
   border: 0;
   border-radius: 8px;
   cursor: pointer;
   background-color: var(--border-color);
   color: var(--text-color);
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+button:hover {
+  opacity: 0.85;
+  transform: translateY(-1px);
+}
+
+button:active {
+  transform: translateY(0);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  transform: none;
 }
 
 button.primary {
@@ -52,20 +90,77 @@ button.primary {
   color: white;
 }
 
+button.primary:hover {
+  background: #0056b3;
+}
+
 .muted {
   color: var(--muted-color);
   font-size: 12px;
 }
 
+.hint {
+  color: var(--muted-color);
+  font-size: 12px;
+}
+
+body.options-page .hint {
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+@media (min-width: 768px) {
+  body.options-page .hint {
+    font-size: 15px;
+  }
+}
+
+body.options-page .hint.ok {
+  color: #28a745;
+  font-weight: 500;
+}
+
+body.options-page .hint.error {
+  color: #dc3545;
+  font-weight: 500;
+}
+
 #result {
-  margin-top: 10px;
+  margin-top: 12px;
+  padding: 12px;
+  background: rgba(0, 123, 255, 0.05);
+  border-radius: 8px;
   white-space: pre-wrap;
+  line-height: 1.6;
+  min-height: 20px;
+  transition: background-color 0.2s ease;
+}
+
+body.dark-mode #result {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+#result:empty::before {
+  content: "Results will appear here.";
+  color: var(--muted-color);
 }
 
 .divider {
   height: 1px;
   background: var(--border-color);
   margin: 10px 0;
+}
+
+body.options-page .divider {
+  height: 2px;
+  background: linear-gradient(to right, transparent, var(--border-color), transparent);
+  margin: 32px 0;
+}
+
+@media (min-width: 768px) {
+  body.options-page .divider {
+    margin: 48px 0;
+  }
 }
 
 /* Toggle container */
@@ -144,173 +239,459 @@ input:checked + .toggle-slider:before {
 }
 
 /* Options Page Specific Styles */
-.options-page body {
-  max-width: 720px;
-  line-height: 1.5;
-  margin: 20px;
+body.options-page .options-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 24px;
+  line-height: 1.6;
+  box-sizing: border-box;
 }
 
-.options-page h1 {
+@media (min-width: 768px) {
+  body.options-page .options-container {
+    padding: 60px 40px;
+  }
+}
+
+@media (min-width: 1200px) {
+  body.options-page .options-container {
+    padding: 80px 60px;
+  }
+}
+
+body.options-page h1 {
   color: var(--primary-color);
-  margin-bottom: 8px;
+  margin-bottom: 12px;
+  font-size: 32px;
+  font-weight: 700;
+  line-height: 1.2;
 }
 
-.config-description {
-  margin-bottom: 32px;
+@media (min-width: 768px) {
+  body.options-page h1 {
+    font-size: 40px;
+    margin-bottom: 16px;
+  }
+}
+
+body.options-page .config-description {
+  margin-bottom: 40px;
   font-size: 16px;
+  color: var(--muted-color);
+  line-height: 1.6;
 }
 
-.form-group {
-  margin-bottom: 24px;
+@media (min-width: 768px) {
+  body.options-page .config-description {
+    font-size: 18px;
+    margin-bottom: 48px;
+  }
 }
 
-.form-group label {
+body.options-page .form-group {
+  margin-bottom: 28px;
+}
+
+@media (min-width: 768px) {
+  body.options-page .form-group {
+    margin-bottom: 32px;
+  }
+}
+
+body.options-page .form-group label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
   font-weight: 600;
+  font-size: 15px;
   color: var(--text-color);
 }
 
-.options-page input[type="text"],
-.options-page input[type="password"],
-.options-page select {
+@media (min-width: 768px) {
+  body.options-page .form-group label {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+}
+
+body.options-page input[type="text"],
+body.options-page input[type="password"],
+body.options-page select {
   width: 100%;
-  padding: 12px;
-  border: 1px solid var(--border-color);
-  border-radius: 8px;
-  font-size: 14px;
+  padding: 14px 16px;
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  font-size: 15px;
   background-color: var(--bg-color);
   color: var(--text-color);
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
 }
 
-.options-page input[type="text"]:focus,
-.options-page input[type="password"]:focus,
-.options-page select:focus {
+@media (min-width: 768px) {
+  body.options-page input[type="text"],
+  body.options-page input[type="password"],
+  body.options-page select {
+    padding: 16px 18px;
+    font-size: 16px;
+  }
+}
+
+body.options-page input[type="text"]:focus,
+body.options-page input[type="password"]:focus,
+body.options-page select:focus {
   outline: none;
   border-color: var(--primary-color);
-  box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+  box-shadow: 0 0 0 4px rgba(0, 123, 255, 0.15);
+  transform: translateY(-1px);
 }
 
-.checkbox-group {
+body.options-page .api-key-hint {
   margin-bottom: 32px;
+  padding: 20px;
+  background: rgba(0, 123, 255, 0.05);
+  border-radius: 12px;
+  border-left: 4px solid var(--primary-color);
 }
 
-.checkbox-label {
+body.dark-mode .options-page .api-key-hint {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+@media (min-width: 768px) {
+  body.options-page .api-key-hint {
+    padding: 24px;
+    margin-bottom: 40px;
+  }
+}
+
+body.options-page .api-key-hint strong {
+  display: block;
+  margin-bottom: 12px;
+  color: var(--text-color);
+  font-size: 15px;
+}
+
+body.options-page .api-key-hint ol {
+  margin: 0;
+  padding-left: 24px;
+  color: var(--muted-color);
+  line-height: 1.8;
+}
+
+body.options-page .api-key-hint li {
+  margin-bottom: 8px;
+}
+
+body.options-page .api-key-hint a {
+  color: var(--primary-color);
+  text-decoration: none;
+  transition: opacity 0.2s ease;
+}
+
+body.options-page .api-key-hint a:hover {
+  opacity: 0.8;
+  text-decoration: underline;
+}
+
+body.options-page .checkbox-group {
+  margin-bottom: 28px;
+  padding: 20px;
+  background: rgba(0, 123, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(0, 123, 255, 0.1);
+  transition: all 0.2s ease;
+}
+
+body.dark-mode .options-page .checkbox-group {
+  background: rgba(255, 255, 255, 0.03);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+body.options-page .checkbox-group:hover {
+  border-color: rgba(0, 123, 255, 0.2);
+  background: rgba(0, 123, 255, 0.05);
+}
+
+body.dark-mode .options-page .checkbox-group:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+@media (min-width: 768px) {
+  body.options-page .checkbox-group {
+    margin-bottom: 32px;
+    padding: 24px;
+  }
+}
+
+body.options-page .checkbox-label {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 14px;
   cursor: pointer;
-  font-weight: normal;
+  font-weight: 500;
+  font-size: 15px;
+  color: var(--text-color);
+  transition: color 0.2s ease;
 }
 
-.checkbox-label input[type="checkbox"] {
-  width: 18px;
-  height: 18px;
+@media (min-width: 768px) {
+  body.options-page .checkbox-label {
+    font-size: 16px;
+    gap: 16px;
+  }
+}
+
+body.options-page .checkbox-label:hover {
+  color: var(--primary-color);
+}
+
+body.options-page .checkbox-label input[type="checkbox"] {
+  width: 20px;
+  height: 20px;
   margin: 0;
+  cursor: pointer;
+  accent-color: var(--primary-color);
 }
 
-.form-actions {
-  margin-bottom: 24px;
+@media (min-width: 768px) {
+  body.options-page .checkbox-label input[type="checkbox"] {
+    width: 22px;
+    height: 22px;
+  }
 }
 
-.save-button {
+body.options-page .form-actions {
+  margin-bottom: 32px;
+  margin-top: 40px;
+}
+
+@media (min-width: 768px) {
+  body.options-page .form-actions {
+    margin-top: 48px;
+  }
+}
+
+body.options-page .save-button {
   background: var(--primary-color);
   color: white;
-  padding: 12px 24px;
+  padding: 14px 32px;
   border: none;
-  border-radius: 8px;
-  font-size: 14px;
+  border-radius: 10px;
+  font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.3);
+  width: 100%;
 }
 
-.save-button:hover {
+@media (min-width: 768px) {
+  body.options-page .save-button {
+    width: auto;
+    padding: 16px 40px;
+    font-size: 17px;
+  }
+}
+
+body.options-page .save-button:hover {
   background: #0056b3;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
 }
 
-body.dark-mode .save-button:hover {
+body.options-page .save-button:active {
+  transform: translateY(0);
+}
+
+body.dark-mode .options-page .save-button:hover {
   background: #4da3ff;
 }
 
 /* Chat History Section Styles */
-.chat-history-section {
-  margin-top: 32px;
+body.options-page .chat-history-section {
+  margin-top: 48px;
+  width: 100%;
 }
 
-.chat-history-section h2 {
+@media (min-width: 768px) {
+  body.options-page .chat-history-section {
+    margin-top: 64px;
+  }
+}
+
+body.options-page .chat-history-section h2 {
   color: var(--primary-color);
-  margin-bottom: 8px;
-  font-size: 20px;
+  margin-bottom: 12px;
+  font-size: 24px;
+  font-weight: 700;
 }
 
-.chat-controls {
+@media (min-width: 768px) {
+  body.options-page .chat-history-section h2 {
+    font-size: 28px;
+    margin-bottom: 16px;
+  }
+}
+
+body.options-page .chat-controls {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 12px;
 }
 
-.clear-button {
+@media (min-width: 768px) {
+  body.options-page .chat-controls {
+    margin-bottom: 28px;
+  }
+}
+
+body.options-page .clear-button {
   background: #dc3545;
   color: white;
-  padding: 8px 16px;
+  padding: 10px 20px;
   border: none;
-  border-radius: 6px;
-  font-size: 13px;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.clear-button:hover {
-  background: #c82333;
-}
-
-.history-count {
-  font-size: 13px;
-  color: var(--muted-color);
-}
-
-.chat-history-list {
-  max-height: 400px;
-  overflow-y: auto;
-  border: 1px solid var(--border-color);
   border-radius: 8px;
-  background: var(--bg-color);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 6px rgba(220, 53, 69, 0.3);
 }
 
-.chat-item {
-  padding: 16px;
+@media (min-width: 768px) {
+  body.options-page .clear-button {
+    padding: 12px 24px;
+    font-size: 15px;
+  }
+}
+
+body.options-page .clear-button:hover {
+  background: #c82333;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 10px rgba(220, 53, 69, 0.4);
+}
+
+body.options-page .clear-button:active {
+  transform: translateY(0);
+}
+
+body.options-page .history-count {
+  font-size: 14px;
+  color: var(--muted-color);
+  font-weight: 500;
+}
+
+@media (min-width: 768px) {
+  body.options-page .history-count {
+    font-size: 15px;
+  }
+}
+
+body.options-page .chat-history-list {
+  max-height: 500px;
+  overflow-y: auto;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--bg-color);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+body.dark-mode .options-page .chat-history-list {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+@media (min-width: 768px) {
+  body.options-page .chat-history-list {
+    max-height: 600px;
+  }
+}
+
+/* Custom scrollbar for chat history */
+body.options-page .chat-history-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+body.options-page .chat-history-list::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+body.options-page .chat-history-list::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+body.options-page .chat-history-list::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-color);
+}
+
+body.options-page .chat-item {
+  padding: 20px;
   border-bottom: 1px solid var(--border-color);
   cursor: pointer;
-  transition: background-color 0.2s ease;
+  transition: all 0.2s ease;
 }
 
-.chat-item:hover {
-  background: rgba(0, 123, 255, 0.05);
+@media (min-width: 768px) {
+  body.options-page .chat-item {
+    padding: 24px;
+  }
 }
 
-.chat-item:last-child {
+body.options-page .chat-item:hover {
+  background: rgba(0, 123, 255, 0.08);
+  transform: translateX(4px);
+}
+
+body.dark-mode .options-page .chat-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+body.options-page .chat-item:last-child {
   border-bottom: none;
 }
 
-.chat-title {
+body.options-page .chat-title {
   font-weight: 600;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
   color: var(--text-color);
+  font-size: 16px;
 }
 
-.chat-date {
-  font-size: 12px;
-  color: var(--muted-color);
-  margin-bottom: 8px;
+@media (min-width: 768px) {
+  body.options-page .chat-title {
+    font-size: 17px;
+    margin-bottom: 8px;
+  }
 }
 
-.chat-preview {
+body.options-page .chat-date {
   font-size: 13px;
   color: var(--muted-color);
-  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+@media (min-width: 768px) {
+  body.options-page .chat-date {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+}
+
+body.options-page .chat-preview {
+  font-size: 14px;
+  color: var(--muted-color);
+  line-height: 1.5;
+}
+
+@media (min-width: 768px) {
+  body.options-page .chat-preview {
+    font-size: 15px;
+  }
 }
 
 .chat-expanded {
@@ -343,11 +724,19 @@ body.dark-mode .chat-conversation {
   color: var(--text-color);
 }
 
-.empty-history {
+body.options-page .empty-history {
   text-align: center;
-  padding: 40px 20px;
+  padding: 60px 20px;
   color: var(--muted-color);
   font-style: italic;
+  font-size: 15px;
+}
+
+@media (min-width: 768px) {
+  body.options-page .empty-history {
+    padding: 80px 40px;
+    font-size: 16px;
+  }
 }
 
 /* Follow-up Container Styles */
@@ -485,8 +874,15 @@ body.dark-mode .followup-container {
 }
 
 /* Developer Section Styles */
-.developer-section {
-  margin-top: 32px;
+body.options-page .developer-section {
+  margin-top: 48px;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  body.options-page .developer-section {
+    margin-top: 64px;
+  }
 }
 
 .developer-section h3 {
@@ -501,17 +897,30 @@ body.dark-mode .followup-container {
   gap: 12px;
 }
 
-.developer-name {
+body.options-page .developer-name {
   font-size: 16px;
   font-weight: 600;
   margin: 0;
   color: var(--text-color);
 }
 
-.social-links {
+@media (min-width: 768px) {
+  body.options-page .developer-name {
+    font-size: 18px;
+  }
+}
+
+body.options-page .social-links {
   display: flex;
   gap: 12px;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+@media (min-width: 768px) {
+  body.options-page .social-links {
+    gap: 16px;
+  }
 }
 
 .social-link {
@@ -575,13 +984,18 @@ body.dark-mode .social-link.github:hover {
 .social-link svg {
   transition: all 0.2s ease;
 }
-#saveBtn {
-  background-color: #eee;
-  color: #333;
 
-}
 #btnExplain {
   background-color: #eee;
   color: #333;
+}
 
+
+#btnFollowUp {
+  background-color: #28a745;
+  color: white;
+}
+
+#btnFollowUp:hover {
+  background-color: #218838;
 }
