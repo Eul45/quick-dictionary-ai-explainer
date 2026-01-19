@@ -328,6 +328,57 @@ body.options-page select {
   box-sizing: border-box;
 }
 
+/* API Key Input Wrapper */
+.api-key-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.api-key-input-wrapper input[type="text"],
+.api-key-input-wrapper input[type="password"] {
+  padding-right: 90px;
+}
+
+.api-key-input-wrapper .icon-button {
+  position: absolute;
+  right: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-color);
+  transition: all 0.2s ease;
+  border-radius: 6px;
+  width: 36px;
+  height: 36px;
+}
+
+.api-key-input-wrapper .icon-button:hover {
+  background: rgba(0, 123, 255, 0.1);
+  color: var(--primary-color);
+  transform: scale(1.1);
+}
+
+.api-key-input-wrapper .icon-button:active {
+  transform: scale(0.95);
+}
+
+.api-key-input-wrapper .icon-button svg {
+  pointer-events: none;
+}
+
+.api-key-input-wrapper #copyApiKey {
+  right: 48px;
+}
+
+body.dark-mode .api-key-input-wrapper .icon-button:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
 @media (min-width: 768px) {
   body.options-page input[type="text"],
   body.options-page input[type="password"],
