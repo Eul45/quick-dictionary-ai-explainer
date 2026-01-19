@@ -7,6 +7,10 @@ const darkModeEl = document.getElementById('darkMode');
 const includePageContextEl = document.getElementById('includePageContext');
 const statusEl = document.getElementById('status');
 const saveBtn = document.getElementById('saveBtn');
+const toggleApiKeyVisibilityBtn = document.getElementById('toggleApiKeyVisibility');
+const copyApiKeyBtn = document.getElementById('copyApiKey');
+const eyeIcon = document.getElementById('eyeIcon');
+const eyeOffIcon = document.getElementById('eyeOffIcon');
 
 // Available Gemini models
 const GEMINI_MODELS = [
@@ -218,6 +222,53 @@ function checkHashAndScroll() {
   }
 }
 
+// Toggle API key visibility
+function toggleApiKeyVisibility() {
+  if (apiKeyEl.type === 'password') {
+    apiKeyEl.type = 'text';
+    eyeIcon.style.display = 'none';
+    eyeOffIcon.style.display = 'block';
+  } else {
+    apiKeyEl.type = 'password';
+    eyeIcon.style.display = 'block';
+    eyeOffIcon.style.display = 'none';
+  }
+}
+
+// Copy API key to clipboard
+async function copyApiKey() {
+  if (!apiKeyEl.value.trim()) {
+    showStatus('No API key to copy', 'error');
+    return;
+  }
+  
+  try {
+    await navigator.clipboard.writeText(apiKeyEl.value);
+    showStatus('API key copied to clipboard ✅', 'ok');
+    
+    // Visual feedback on copy button
+    copyApiKeyBtn.style.transform = 'scale(0.95)';
+    setTimeout(() => {
+      copyApiKeyBtn.style.transform = '';
+    }, 150);
+  } catch (err) {
+    // Fallback for older browsers
+    apiKeyEl.select();
+    document.execCommand('copy');
+    showStatus('API key copied to clipboard ✅', 'ok');
+  }
+}
+
+// Helper function to show status messages
+function showStatus(message, type = '') {
+  statusEl.textContent = message;
+  statusEl.className = `hint ${type}`;
+  setTimeout(() => { 
+    statusEl.textContent = ''; 
+    statusEl.className = 'hint'; 
+  }, 2000);
+}
+
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
   populateModels();
@@ -226,4 +277,12 @@ document.addEventListener('DOMContentLoaded', () => {
   saveBtn.addEventListener('click', save);
   clearHistoryBtn.addEventListener('click', clearAllHistory);
   checkHashAndScroll();
+  
+  // Add event listeners for API key visibility toggle and copy
+  if (toggleApiKeyVisibilityBtn) {
+    toggleApiKeyVisibilityBtn.addEventListener('click', toggleApiKeyVisibility);
+  }
+  if (copyApiKeyBtn) {
+    copyApiKeyBtn.addEventListener('click', copyApiKey);
+  }
 });
